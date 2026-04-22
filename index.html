@@ -4,14 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PaceTrace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #1a1a1a; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        h1 { color: #c0392b; }
+        body { 
+            background-color: #1a1a1a; 
+            color: white; 
+            font-family: sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .container {
+            text-align: center;
+        }
+        h1 { 
+            color: #c0392b; 
+            margin-bottom: 5px;
+        }
+        h3 {
+            color: #888;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+        .btn-group {
+            /* Shrink container to fit widest button, then stretch the rest to match */
+            display: inline-flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+        .btn {
+            background-color: #c0392b;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Left-align the contents */
+            gap: 12px;
+            font-size: 1.05em;
+        }
+        .btn i {
+            font-size: 1.2em;
+            width: 30px; /* Fixed width ensures all button text lines up perfectly */
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #a93226;
+        }
     </style>
 </head>
 <body>
-    <div>
+    <div class="container">
         <h1>PaceTrace</h1>
+
+        <div class="btn-group">
+            <h3 id="download-header">Loading latest version...</h3>
+            
+            <a href="https://github.com/pacetrace/pacetrace-site/releases/latest/download/Pacetrace_windows-x64.exe" class="btn">
+                <i class="fa-brands fa-windows"></i>Windows
+            </a>
+            
+            <a href="https://github.com/pacetrace/pacetrace-site/releases/latest/download/Pacetrace_macos-apple-silicon.dmg" class="btn">
+                <i class="fa-brands fa-apple"></i>Mac (Apple Silicon)
+            </a>
+
+            <a href="https://github.com/pacetrace/pacetrace-site/releases/latest/download/Pacetrace_macos-intel.dmg" class="btn">
+                <i class="fa-brands fa-apple"></i>Mac (Intel)
+            </a>
+        </div>
     </div>
+
+    <script>
+        fetch('https://api.github.com/repos/pacetrace/pacetrace-site/releases/latest')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                const headerText = document.getElementById('download-header');
+                if (headerText && data.tag_name) {
+                    headerText.textContent = 'Download (' + data.tag_name + ')';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching version:', error);
+                document.getElementById('download-header').textContent = 'Download (Latest)';
+            });
+    </script>
 </body>
 </html>
